@@ -7,52 +7,51 @@ platform:
   arch: amd64
 
 steps:
-- name: build
-  image: kogitoapp/php:7.2-cli
-  volumes:
-  - name: vendor-cache
-    path: /drone/src/vendor
-  commands:
-  - composer install
+  - name: build
+    image: kogitoapp/php:7.2-cli
+    volumes:
+      - name: vendor-cache
+        path: /drone/src/vendor
+    commands:
+      - composer install
 
-- name: test
-  image: kogitoapp/php:7.2-cli
-  volumes:
-  - name: vendor-cache
-    path: /drone/src/vendor
-  commands:
-  - vendor/bin/phpunit --testdox
-  when:
-    status:
-    - success
+  - name: test
+    image: kogitoapp/php:7.2-cli
+    volumes:
+      - name: vendor-cache
+        path: /drone/src/vendor
+    commands:
+      - vendor/bin/phpunit --testdox
+    when:
+      status:
+        - success
 
-- name: commands-inspect
-  image: kogitoapp/php:7.2-cli
-  volumes:
-  - name: vendor-cache
-    path: /drone/src/vendor
-  commands:
-  - ./bin/dbc-tool dbc:inspect tests/data/AreaPOI.dbc
-  - ./bin/dbc-tool dbc:inspect tests/data/BankBagSlotPrices.dbc
-  - ./bin/dbc-tool dbc:inspect tests/data/Spell.dbc
-  when:
-    status:
-    - success
+  - name: commands-inspect
+    image: kogitoapp/php:7.2-cli
+    volumes:
+      - name: vendor-cache
+        path: /drone/src/vendor
+    commands:
+      - ./bin/dbc-tool dbc:inspect tests/data/AreaPOI.dbc
+      - ./bin/dbc-tool dbc:inspect tests/data/BankBagSlotPrices.dbc
+      - ./bin/dbc-tool dbc:inspect tests/data/Spell.dbc
+    when:
+      status:
+        - success
 
-- name: commands-view
-  image: kogitoapp/php:7.2-cli
-  volumes:
-  - name: vendor-cache
-    path: /drone/src/vendor
-  commands:
-  - ./bin/dbc-tool dbc:view tests/data/AreaPOI.dbc tests/data/maps/AreaPOI.yaml --rows 10
-  - ./bin/dbc-tool dbc:view tests/data/BankBagSlotPrices.dbc tests/data/maps/BankBagSlotPrices.yaml --rows 10
-  - ./bin/dbc-tool dbc:view tests/data/Spell.dbc tests/data/maps/Spell.yaml --rows 10
-  when:
-    status:
-    - success
+  - name: commands-view
+    image: kogitoapp/php:7.2-cli
+    volumes:
+      - name: vendor-cache
+        path: /drone/src/vendor
+    commands:
+      - ./bin/dbc-tool dbc:view tests/data/AreaPOI.dbc tests/data/maps/AreaPOI.yaml --rows 10
+      - ./bin/dbc-tool dbc:view tests/data/BankBagSlotPrices.dbc tests/data/maps/BankBagSlotPrices.yaml --rows 10
+      - ./bin/dbc-tool dbc:view tests/data/Spell.dbc tests/data/maps/Spell.yaml --rows 10
+    when:
+      status:
+        - success
 
 volumes:
-- name: vendor-cache
-  temp: {}
-...
+  - name: vendor-cache
+    temp: {}
